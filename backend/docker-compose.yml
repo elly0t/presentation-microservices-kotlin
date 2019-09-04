@@ -46,6 +46,29 @@ services:
       - APP_DATABASE_PASS=${APP_DATABASE_PASS}
       - APP_DATABASE_DBNAME=${APP_DATABASE_DBNAME}
       - APP_DATABASE_SCHEMA=${APP_DATABASE_SCHEMA}
+  itemListing:
+    image: gradle:5.5-jdk8
+    working_dir: /app
+    command: ./gradlew --no-daemon -p itemListing bootRun
+    depends_on:
+      - db
+    ports:
+      - 8002
+    volumes:
+      - /app/iteListing/build/
+      - ./gradlew:/app/gradlew:ro
+      - ./gradle:/app/gradle:ro
+      - ./settings.gradle.kts:/app/settings.gradle.kts:ro
+      - ./itemListing:/app/itemListing
+    environment:
+      - APP_DEBUG=true
+      - APP_PORT=8002
+      - APP_DATABASE_HOST=${APP_DATABASE_HOST}
+      - APP_DATABASE_PORT=${APP_DATABASE_PORT}
+      - APP_DATABASE_USER=${APP_DATABASE_USER}
+      - APP_DATABASE_PASS=${APP_DATABASE_PASS}
+      - APP_DATABASE_DBNAME=${APP_DATABASE_DBNAME}
+      - APP_DATABASE_SCHEMA=${APP_DATABASE_SCHEMA}
   app:
     image: gradle:5.5-jdk8
     working_dir: /app
