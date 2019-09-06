@@ -20,6 +20,9 @@ data class Product(
         @Column(nullable = false)
         val price: Float = 0f,
 
+        @Column(nullable = true)
+        val image: String = "",
+
 //        @Column(nullable = false)
 //        val stock: ULong = 0,
 

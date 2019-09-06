@@ -5,10 +5,10 @@ services:
     volumes:
       - minio-data:/minio-data
     ports:
-      - "9000:9000"
+      - 9000:9000
     environment:
       MINIO_ACCESS_KEY: minioaccesskey
-      MINIO_SECRET_KEY: minisecretkey
+      MINIO_SECRET_KEY: miniosecretkey
     command: server /minio-data
   db:
     image: postgres:11.5
@@ -63,7 +63,7 @@ services:
     depends_on:
       - db
     ports:
-      - 8002:8002
+      - 8002
     volumes:
       - /app/product/build/
       - ./gradlew:/app/gradlew:ro
