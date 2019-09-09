@@ -1,11 +1,11 @@
-package com.oursky.presentation.microservices.kotlin.itemListing
+package com.oursky.presentation.microservices.kotlin.product
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class ItemListingApplication
+class ProductApplication
 
 fun main(args: Array<String>) {
-    runApplication<ItemListingApplication>(*args)
+    runApplication<ProductApplication>(*args)
 }

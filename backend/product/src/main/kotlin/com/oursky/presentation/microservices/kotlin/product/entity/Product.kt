@@ -1,4 +1,4 @@
-package com.oursky.presentation.microservices.kotlin.itemListing.entity
+package com.oursky.presentation.microservices.kotlin.product.entity
 
 import javax.persistence.Entity
 import javax.persistence.Id
@@ -7,7 +7,7 @@ import javax.persistence.GenerationType
 import javax.persistence.Column
 
 @Entity
-data class Item(
+data class Product(
         @Id @GeneratedValue(strategy = GenerationType.AUTO)
         val id: Long = -1,
 

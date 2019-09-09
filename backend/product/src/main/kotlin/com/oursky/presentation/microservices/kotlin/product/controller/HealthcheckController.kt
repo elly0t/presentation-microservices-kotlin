@@ -1,4 +1,4 @@
-package com.oursky.presentation.microservices.kotlin.itemListing.controller
+package com.oursky.presentation.microservices.kotlin.product.controller
 
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.GetMapping
