@@ -69,11 +69,8 @@ class ProductService {
         }
     }
 
-    fun uploadImage(id: Long, image: MultipartFile): String? {
+    fun addNewProduct(name: String, description: String, price: Float, image: MultipartFile): Long? {
         try{
-            if(!repository.existsById(id)){
-                return null
-            }
             val currentTimestamp = System.currentTimeMillis().toString()
             val bytes = image.getName().plus(currentTimestamp).toByteArray()
             val md = MessageDigest.getInstance("SHA-1")
@@ -81,22 +78,7 @@ class ProductService {
             val objectName = digest.fold("", { str, it -> str + "%02x".format(it) })
             val headerMap: HashMap<String,String> = hashMapOf<String,String>("Content-Type" to "application/octet-stream")
             minioClient.putObject("images", objectName, image.getInputStream(), image.getSize(), headerMap)
-//            val url = minioClient.presignedPutObject("images", currentTimestamp)
-//            println(url)
-            var product = this.findById(id)
-            product.image = objectName
-            repository.save(product)
-            return objectName
-        }catch(e: Throwable){
-            println(e.message)
-            println(e.cause)
-            return null
-        }
-    }
-
-    fun addNewProduct(name: String, description: String, price: Float): Long? {
-        try{
-            val product = repository.save(Product(name = name, description = description, price = price, enabled = true))
+            val product = repository.save(Product(name = name, description = description, price = price, enabled = true, image = objectName))
             return product.id
         }catch(e: Throwable){
             println(e.message)

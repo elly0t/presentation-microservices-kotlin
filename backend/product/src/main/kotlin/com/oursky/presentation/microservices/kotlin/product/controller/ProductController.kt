@@ -15,18 +15,13 @@ import org.springframework.http.ResponseEntity
 import com.oursky.presentation.microservices.kotlin.product.service.ProductService
 import com.oursky.presentation.microservices.kotlin.product.entity.Product
 import org.springframework.web.multipart.MultipartFile
+import org.springframework.web.multipart.MultipartHttpServletRequest
 
 @RestController
 @RequestMapping("/product")
 public class ProductController {
     @Autowired
     lateinit var productService: ProductService
-
-    data class AddProductRequest(
-            val name: String,
-            val description: String,
-            val price: Float
-    )
 
     data class AddProductResponse(
             val productId: Long
@@ -44,25 +39,15 @@ public class ProductController {
             var success: Boolean
     )
 
-    @PostMapping("/{id}/image")
-    fun addImage(
-            @RequestParam("files") image: MultipartFile,
-            @PathVariable id: Long
-    ): ResponseEntity<AddImageResponse> {
-        if(image.isEmpty()){
-            return ResponseEntity(HttpStatus.BAD_REQUEST)
-        }
-        val name = productService.uploadImage(id, image) ?: return ResponseEntity(HttpStatus.BAD_REQUEST)
-        return ResponseEntity.ok(AddImageResponse(
-                data = name
-        ))
-    }
-
     @PostMapping("/")
     fun add(
-            @RequestBody body: AddProductRequest
+            request: MultipartHttpServletRequest,
+            @RequestParam("files") image: MultipartFile,
+            @RequestParam("name") name: String,
+            @RequestParam("description") description: String,
+            @RequestParam("price") price: Float
     ): ResponseEntity<AddProductResponse> {
-        val productId = productService.addNewProduct(body.name, body.description, body.price)
+        val productId = productService.addNewProduct(name, description, price, image)
                 ?: return ResponseEntity(HttpStatus.BAD_REQUEST)
         return ResponseEntity.ok(AddProductResponse(
                 productId = productId
