@@ -32,11 +32,11 @@ public class ProductController {
     )
 
     data class AllProductResponse(
-            var products: MutableIterable<Product>
+            val products: MutableIterable<Product>
     )
 
     data class DeleteProductResponse(
-            var success: Boolean
+            val success: Boolean
     )
 
     @PostMapping("/")
