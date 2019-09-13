@@ -11,8 +11,9 @@ Presented at GDG Kotlin/Everywhere Hong Kong : A Day of Kotlin, 31st Aug 2019
 
 Slides can be found [here](https://drive.google.com/file/d/1EkioxNMzPW2sfPd3s8Cn7GyNuC7_u4-N/view?usp=sharing).
 
-Two backend services are created in this project, `auth` and `app` respectively. A microservice-based architecture can be achieved locally with docker-compose. We have also deployed them on Oursky's k8s cluster.
+Three backend services are created in this project, `auth`, `app` and `product` respectively. A microservice-based architecture can be achieved locally with docker-compose. We have also deployed them on Oursky's k8s cluster.
 
+MinIO is using in this project to store all the products images.
 
 ## Get Started
 ##### Generate secret
@@ -29,8 +30,13 @@ docker-compose -p demo up
 ```
 curl http://localhost:8080/auth/ping
 curl http://localhost:8080/app/ping
+curl http://localhost:8080/product/ping
+curl http://localhost:8080/product/     //Return all the products in database.
 curl -X POST http://localhost:8080/auth/signup -H "Content-Type: application/json" -d '{"user": "test", "pass": "1234"}'
 curl -X POST http://localhost:8080/auth/login -H "Content-Type: application/json" -d '{"user": "test", "pass": "1234"}'
+
+# NOTE: replace {id} with product id
+curl -X DELETE http://localhost:8080/product/{id}
 
 # NOTE: replace with access token from signup/login response
 curl -vvv http://localhost:8080/app/ping2 -H "Authorization: Bearer ACCESS_TOKEN"
