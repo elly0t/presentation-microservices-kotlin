@@ -15,16 +15,13 @@ data class Product(
         val name: String = "",
 
         @Column(nullable = true, unique = false, length = 256)
-        val description: String = "",
+        val description: String? = "",
 
         @Column(nullable = false)
         val price: Float = 0f,
 
         @Column(nullable = true)
-        var image: String = "",
-
-//        @Column(nullable = false)
-//        val stock: ULong = 0,
+        val image: String? = "",
 
         val enabled: Boolean = true
 )
