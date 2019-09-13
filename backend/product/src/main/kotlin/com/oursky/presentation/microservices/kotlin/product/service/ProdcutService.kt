@@ -21,39 +21,41 @@ import java.lang.StringBuilder
 @Service
 class ProductService {
     private val log = LoggerFactory.getLogger(this.javaClass.name)
+    private val minioClientEndPoint = "http://172.18.0.1:9000"
 
     @Autowired
     lateinit var repository: ProductRepository
 
-    var minioClient: MinioClient
+    val minioClient: MinioClient by lazy {
+        MinioClient(minioClientEndPoint, "minioaccesskey", "miniosecretkey")
+    }
 
     constructor(){
-        minioClient = MinioClient(URL("http", "172.18.0.1", 9000, ""), "minioaccesskey", "miniosecretkey")
-        if(!minioClient.bucketExists("images")) {
+       if(!minioClient.bucketExists("images")) {
             minioClient.makeBucket("images")
         }
-        val builder = StringBuilder()
-        builder.append("{\n")
-        builder.append("    \"Statement\": [\n")
-        builder.append("        {\n")
-        builder.append("            \"Action\": [\n")
-        builder.append("                \"s3:GetBucketLocation\",\n")
-        builder.append("                \"s3:ListBucket\"\n")
-        builder.append("            ],\n")
-        builder.append("            \"Effect\": \"Allow\",\n")
-        builder.append("            \"Principal\": \"*\",\n")
-        builder.append("            \"Resource\": \"arn:aws:s3:::images\"\n")
-        builder.append("        },\n")
-        builder.append("        {\n")
-        builder.append("            \"Action\": \"s3:GetObject\",\n")
-        builder.append("            \"Effect\": \"Allow\",\n")
-        builder.append("            \"Principal\": \"*\",\n")
-        builder.append("            \"Resource\": \"arn:aws:s3:::images/*\"\n")
-        builder.append("        }\n")
-        builder.append("    ],\n")
-        builder.append("    \"Version\": \"2012-10-17\"\n")
-        builder.append("}\n")
-        minioClient.setBucketPolicy("images", builder.toString())
+        minioClient.setBucketPolicy("images", """
+            {
+                "Statement": [
+                    {
+                        "Action": [
+                            "s3:GetBucketLocation",
+                            "s3:ListBucket"
+                        ],
+                        "Effect": "Allow",
+                        "Principal": "*",
+                        "Resource": "arn:aws:s3:::images"
+                    },
+                    {
+                        "Action": "s3:GetObject",
+                        "Effect": "Allow",
+                        "Principal": "*",
+                        "Resource": "arn:aws:s3:::images/*"
+                    }
+                ],
+                "Version": "2012-10-17"
+            }
+        """.trimIndent())
     }
 
     fun findById(id: Long): Product {
